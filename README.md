@@ -14,7 +14,9 @@
 
 ### Authentication
 
-All API endpoints require authentication using Token authentication. You can obtain a token by sending a POST request to the `/api/token/` endpoint with a valid username and password in the request body.
+All API endpoints require authentication using Token authentication. You can obtain a token by sending a POST request to the `api-token-auth/` endpoint with a valid username and password in the request body.
+
+Add the token generated in the Headers
 
 ### Endpoints
 
