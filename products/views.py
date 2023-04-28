@@ -2,7 +2,9 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,authentication_classes, permission_classes
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Product
@@ -14,6 +16,8 @@ from rest_framework.pagination import PageNumberPagination   #for pagination
 
 @api_view(['GET','POST'])
 @csrf_exempt
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def product_list(request):
     if request.method == 'GET':
         products = Product.objects.all()
@@ -64,6 +68,7 @@ def product_detail(request, pk):
 
 # searching and pagination
 @api_view(['GET'])
+@csrf_exempt
 def search_products(request):
    
     query = request.GET.get('query', '')
