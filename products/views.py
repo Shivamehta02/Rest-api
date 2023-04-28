@@ -8,6 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Product
 from .serializers import ProductSerializer
 
+
+from django.db.models import Q    # for searching
+from rest_framework.pagination import PageNumberPagination   #for pagination
+
 @api_view(['GET','POST'])
 @csrf_exempt
 def product_list(request):
@@ -35,7 +39,7 @@ def product_detail(request, pk):
         serializer = ProductSerializer(product)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = ProductSerializer(product, data=request.POST)
+        serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -43,3 +47,35 @@ def product_detail(request, pk):
     elif request.method == 'DELETE':
         product.delete()
         return Response(status=204) 
+
+#only search
+# @api_view(['GET'])
+# def search_products(request):
+   
+#     query = request.GET.get('query', '')
+#     if not query:
+#         return Response({'error': 'No search query provided.'}, status=400)
+    
+#     products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+#     serializer = ProductSerializer(products, many=True)
+#     return Response(serializer.data)
+
+
+
+# searching and pagination
+@api_view(['GET'])
+def search_products(request):
+   
+    query = request.GET.get('query', '')
+    if not query:
+        return Response({'error': 'No search query provided.'}, status=400)
+    
+    products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+    
+    # Pagination
+    paginator = PageNumberPagination()
+    paginator.page_size = 10 # set the number of items per page
+    paginated_products = paginator.paginate_queryset(products, request)
+    
+    serializer = ProductSerializer(paginated_products, many=True)
+    return paginator.get_paginated_response(serializer.data)
