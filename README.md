@@ -15,7 +15,8 @@
 ### Authentication
 
 All API endpoints require authentication using Token authentication. You can obtain a token by sending a POST request to the `api-token-auth/` endpoint with a valid username and password in the request body.
-
+Example usage:
+POST http://127.0.0.1:8000/api-token-auth/
 Add the token generated in the Headers
 
 ### Endpoints
@@ -76,5 +77,15 @@ Example usage:
 #####
 
 ##### Pagination
-##### Example usage: GET /api/search/?query=phone&page=1
+#####  GET /api/search/?query=phone&page=1
+Returns a list of products that match the specified search query and page no.
+Example usage:
+     GET http://127.0.0.1:8000/api/search/?query=phone&page=1
+
+
+##### Sorting
+#####  GET /api/?sort_by=price&sort_order=desc
+Returns a list of products that match the specified search query and page no.
+Example usage:
+     GET http://127.0.0.1:8000/api/?sort_by=price&sort_order=desc
 

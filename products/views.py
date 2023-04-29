@@ -14,13 +14,23 @@ from .serializers import ProductSerializer
 from django.db.models import Q    # for searching
 from rest_framework.pagination import PageNumberPagination   #for pagination
 
+
+
+
 @api_view(['GET','POST'])
 @csrf_exempt
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def product_list(request):
     if request.method == 'GET':
-        products = Product.objects.all()
+        sort_by = request.query_params.get('sort_by', 'id') #sorting 
+        sort_order = request.query_params.get('sort_order', 'asc')
+        if sort_order == 'desc':
+            sort_by = '-' + sort_by
+
+        # Get all products and sort them
+        products = Product.objects.all().order_by(sort_by)
+        # products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
     elif request.method == 'POST':
