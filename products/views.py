@@ -18,7 +18,7 @@ from rest_framework.pagination import PageNumberPagination   #for pagination
 
 
 @api_view(['GET','POST'])
-@csrf_exempt
+
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def product_list(request):
@@ -42,7 +42,7 @@ def product_list(request):
  
 
 @api_view(['GET','PUT', 'DELETE'])
-@csrf_exempt
+
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def product_detail(request, pk):
@@ -80,7 +80,8 @@ def product_detail(request, pk):
 
 # searching and pagination
 @api_view(['GET'])
-@csrf_exempt
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def search_products(request):
    
     query = request.GET.get('query', '')
